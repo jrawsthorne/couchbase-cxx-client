@@ -25,6 +25,7 @@
 #include <spdlog/spdlog.h>
 
 #include <couchbase/cluster.hxx>
+#include <couchbase/operations/management/bucket.hxx>
 
 inline void
 native_init_logger()
@@ -99,4 +100,54 @@ open_bucket(couchbase::cluster& cluster, const std::string& bucket_name)
     INFO(rc.message());
     REQUIRE_FALSE(rc);
     return rc;
+}
+
+template<class ConditionChecker>
+void
+wait_until_condition(ConditionChecker&& condition_checker)
+{
+    return wait_until_condition(condition_checker, std::chrono::milliseconds(std::chrono::minutes(1)));
+}
+
+template<class ConditionChecker>
+void
+wait_until_condition(ConditionChecker&& condition_checker, std::chrono::milliseconds at_most)
+{
+    return wait_until_condition(condition_checker, at_most, std::chrono::milliseconds(1));
+}
+
+template<class ConditionChecker>
+void
+wait_until_condition(ConditionChecker&& condition_checker, std::chrono::milliseconds at_most, std::chrono::milliseconds delay)
+{
+    const auto start = std::chrono::high_resolution_clock::now();
+    const auto end = start + at_most;
+    auto now = start;
+    auto met = false;
+    while ((now = std::chrono::high_resolution_clock::now()) < end) {
+        if (condition_checker()) {
+            met = true;
+            break;
+        }
+        std::this_thread::sleep_for(delay);
+    }
+    REQUIRE(met);
+}
+
+void
+wait_until_bucket_healthy(couchbase::cluster& cluster, const std::string& bucket_name)
+{
+    wait_until_condition([&cluster, bucket_name]() {
+        couchbase::operations::management::bucket_get_request req{ bucket_name };
+        auto resp = execute_http(cluster, req);
+        REQUIRE_FALSE(resp.ctx.ec);
+        auto healthy = !resp.bucket.nodes.empty();
+        for (const auto& node : resp.bucket.nodes) {
+            if (node.status != "healthy") {
+                healthy = false;
+                break;
+            }
+        }
+        return healthy;
+    });
 }
