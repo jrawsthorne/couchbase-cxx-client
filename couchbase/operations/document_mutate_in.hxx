@@ -58,9 +58,7 @@ struct mutate_in_request {
     bool access_deleted{ false };
     bool create_as_deleted{ false };
     std::optional<std::uint32_t> expiry{};
-    protocol::mutate_in_request_body::store_semantics_type store_semantics{
-        protocol::mutate_in_request_body::store_semantics_type::replace
-    };
+    protocol::store_semantics_type store_semantics{ protocol::store_semantics_type::replace };
     protocol::mutate_in_request_body::mutate_in_specs specs{};
     protocol::durability_level durability_level{ protocol::durability_level::none };
     std::optional<std::chrono::milliseconds> timeout{};

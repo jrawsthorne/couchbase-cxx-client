@@ -41,41 +41,41 @@ struct traits<couchbase::error_map> {
             ei.description = info.at("desc").get_string();
             for (const auto& attribute : info.at("attrs").get_array()) {
                 if (const std::string& attr_val = attribute.get_string(); attr_val == "success") {
-                    ei.attributes.insert(couchbase::error_map::attribute::success);
+                    ei.attributes.insert(couchbase::error_map_attribute::success);
                 } else if (attr_val == "item-only") {
-                    ei.attributes.insert(couchbase::error_map::attribute::item_only);
+                    ei.attributes.insert(couchbase::error_map_attribute::item_only);
                 } else if (attr_val == "invalid-input") {
-                    ei.attributes.insert(couchbase::error_map::attribute::invalid_input);
+                    ei.attributes.insert(couchbase::error_map_attribute::invalid_input);
                 } else if (attr_val == "fetch-config") {
-                    ei.attributes.insert(couchbase::error_map::attribute::fetch_config);
+                    ei.attributes.insert(couchbase::error_map_attribute::fetch_config);
                 } else if (attr_val == "conn-state-invalidated") {
-                    ei.attributes.insert(couchbase::error_map::attribute::conn_state_invalidated);
+                    ei.attributes.insert(couchbase::error_map_attribute::conn_state_invalidated);
                 } else if (attr_val == "auth") {
-                    ei.attributes.insert(couchbase::error_map::attribute::auth);
+                    ei.attributes.insert(couchbase::error_map_attribute::auth);
                 } else if (attr_val == "special-handling") {
-                    ei.attributes.insert(couchbase::error_map::attribute::special_handling);
+                    ei.attributes.insert(couchbase::error_map_attribute::special_handling);
                 } else if (attr_val == "support") {
-                    ei.attributes.insert(couchbase::error_map::attribute::support);
+                    ei.attributes.insert(couchbase::error_map_attribute::support);
                 } else if (attr_val == "temp") {
-                    ei.attributes.insert(couchbase::error_map::attribute::temp);
+                    ei.attributes.insert(couchbase::error_map_attribute::temp);
                 } else if (attr_val == "internal") {
-                    ei.attributes.insert(couchbase::error_map::attribute::internal);
+                    ei.attributes.insert(couchbase::error_map_attribute::internal);
                 } else if (attr_val == "retry-now") {
-                    ei.attributes.insert(couchbase::error_map::attribute::retry_now);
+                    ei.attributes.insert(couchbase::error_map_attribute::retry_now);
                 } else if (attr_val == "retry-later") {
-                    ei.attributes.insert(couchbase::error_map::attribute::retry_later);
+                    ei.attributes.insert(couchbase::error_map_attribute::retry_later);
                 } else if (attr_val == "subdoc") {
-                    ei.attributes.insert(couchbase::error_map::attribute::subdoc);
+                    ei.attributes.insert(couchbase::error_map_attribute::subdoc);
                 } else if (attr_val == "dcp") {
-                    ei.attributes.insert(couchbase::error_map::attribute::dcp);
+                    ei.attributes.insert(couchbase::error_map_attribute::dcp);
                 } else if (attr_val == "auto-retry") {
-                    ei.attributes.insert(couchbase::error_map::attribute::auto_retry);
+                    ei.attributes.insert(couchbase::error_map_attribute::auto_retry);
                 } else if (attr_val == "item-locked") {
-                    ei.attributes.insert(couchbase::error_map::attribute::item_locked);
+                    ei.attributes.insert(couchbase::error_map_attribute::item_locked);
                 } else if (attr_val == "item-deleted") {
-                    ei.attributes.insert(couchbase::error_map::attribute::item_deleted);
+                    ei.attributes.insert(couchbase::error_map_attribute::item_deleted);
                 } else if (attr_val == "rate-limit") {
-                    ei.attributes.insert(couchbase::error_map::attribute::rate_limit);
+                    ei.attributes.insert(couchbase::error_map_attribute::rate_limit);
                 } else {
                     LOG_WARNING(R"(skipping unknown attribute "{}" in error map for code={} and name="{}")", attr_val, ei.code, ei.name);
                 }

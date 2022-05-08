@@ -65,28 +65,28 @@ class mutate_in_response_body
                const cmd_info& /* info */);
 };
 
+enum class store_semantics_type {
+    /**
+     * Replace the document, fail if it does not exist. This is the default.
+     */
+    replace,
+
+    /**
+     * Replace the document or create it if it does not exist.
+     */
+    upsert,
+
+    /**
+     * Replace the document or create it if it does not exist.
+     */
+    insert,
+};
+
 class mutate_in_request_body
 {
   public:
     using response_body_type = mutate_in_response_body;
     static const inline client_opcode opcode = client_opcode::subdoc_multi_mutation;
-
-    enum class store_semantics_type {
-        /**
-         * Replace the document, fail if it does not exist. This is the default.
-         */
-        replace,
-
-        /**
-         * Replace the document or create it if it does not exist.
-         */
-        upsert,
-
-        /**
-         * Replace the document or create it if it does not exist.
-         */
-        insert,
-    };
 
     /**
      * Create the document if it does not exist. Implies `path_flag_create_parents`.
@@ -240,17 +240,17 @@ class mutate_in_request_body
         }
     }
 
-    void store_semantics(store_semantics_type semantics)
+    void store_semantics(protocol::store_semantics_type semantics)
     {
         flags_ &= 0b1111'1100; /* reset first two bits */
         switch (semantics) {
-            case store_semantics_type::replace:
+            case protocol::store_semantics_type::replace:
                 /* leave bits as zeros */
                 break;
-            case store_semantics_type::upsert:
+            case protocol::store_semantics_type::upsert:
                 flags_ |= doc_flag_mkdoc;
                 break;
-            case store_semantics_type::insert:
+            case protocol::store_semantics_type::insert:
                 flags_ |= doc_flag_add;
                 break;
         }

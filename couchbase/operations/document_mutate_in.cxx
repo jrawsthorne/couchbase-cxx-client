@@ -25,7 +25,7 @@ namespace couchbase::operations
 std::error_code
 mutate_in_request::encode_to(mutate_in_request::encoded_request_type& encoded, mcbp_context&& context)
 {
-    if (store_semantics == protocol::mutate_in_request_body::store_semantics_type::upsert && !cas.empty()) {
+    if (store_semantics == protocol::store_semantics_type::upsert && !cas.empty()) {
         return error::common_errc::invalid_argument;
     }
     if (create_as_deleted && !context.supports_feature(protocol::hello_feature::subdoc_create_as_deleted)) {
@@ -95,8 +95,7 @@ mutate_in_request::make_response(error_context::key_value&& ctx, const encoded_r
         std::sort(response.fields.begin(), response.fields.end(), [](const auto& lhs, const auto& rhs) {
             return lhs.original_index < rhs.original_index;
         });
-    } else if (store_semantics == protocol::mutate_in_request_body::store_semantics_type::insert &&
-               response.ctx.ec == error::common_errc::cas_mismatch) {
+    } else if (store_semantics == protocol::store_semantics_type::insert && response.ctx.ec == error::common_errc::cas_mismatch) {
         response.ctx.ec = error::key_value_errc::document_exists;
     }
     return response;

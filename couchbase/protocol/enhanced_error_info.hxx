@@ -16,6 +16,7 @@
  */
 
 #pragma once
+#include <string>
 
 namespace couchbase::protocol
 {
